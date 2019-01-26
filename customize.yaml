@@ -1,0 +1,292 @@
+#
+# Emulated Hue Customizations
+#
+light.basement_3way_dimmer_level:
+  emulated_hue_hidden: false
+  emulated_hue_name: "basement ceiling"
+  friendly_name: "Ceiling 3Way Dimmer"
+switch.basement_stairs_switch:
+  emulated_hue_hidden: false
+  emulated_hue_name: "basement stairs switch"
+  friendly_name: "Basement Stairs Switch"
+  icon: mdi:light-switch
+light.tiffany_level:
+  emulated_hue_hidden: false
+  emulated_hue_name: "tiffany"
+  friendly_name: "tiffany"
+light.desk_drawer_level:
+  emulated_hue_hidden: false
+  emulated_hue_name: "desk drawer"
+switch.kitchen_switch:
+  emulated_hue_hidden: false
+  emulated_hue_name: "kitchen"
+switch.living_room_reading_lamp_switch:
+  emulated_hue_hidden: false
+  emulated_hue_name: "living room reading lamp"
+light.basement_corner_level:
+  emulated_hue_hidden: false
+  emulated_hue_name: "basement corner"
+light.front_bedroom:
+  emulated_hue_hidden: true
+light.front_porch_level:
+  emulated_hue_hidden: false
+  emulated_hue_name: "front porch"
+  friendly_name: "front porch"
+light.living_room_corner_level:
+  emulated_hue_hidden: false
+  emulated_hue_name: "living room corner"
+  friendly_name: "living room corner"
+light.living_room_c_table_level:
+  emulated_hue_hidden: false
+  emulated_hue_name: "living room c table"
+  friendly_name: "living room c table"
+light.dining_room_level:
+  emulated_hue_hidden: false
+  emulated_hue_name: "dining room"
+  friendly_name: "dining room"
+light.front_hall_table_level:
+  emulated_hue_hidden: false
+  emulated_hue_name: "front hall table"
+  friendly_name: "front hall table"
+#script.play_xmas_channel:
+#  emulated_hue_hidden: true
+#  emulated_hue_name: "christmas channel"
+#script.play_absolute_xmas:
+#  emulated_hue_hidden: true
+#  emulated_hue_name: "absolute christmas"
+script.stop_mpd:
+  emulated_hue_hidden: false
+  emulated_hue_name: "stop radio"
+script.play_classic_rock_109:
+  emulated_hue_hidden: false
+  emulated_hue_name: "classic rock 109"
+#script.play_holiday_standards:
+#  emulated_hue_hidden: true
+#  emulated_hue_name: "holiday standards"
+script.play_prime_classic_rock:
+  emulated_hue_hidden: false
+  emulated_hue_name: "prime classic rock"
+script.turn_on_lr_pc:
+  emulated_hue_hidden: false
+  emulated_hue_name: "living room computer"
+script.turn_off_lr_pc:
+  emulated_hue_hidden: false
+  emulated_hue_name: "living room computer off"
+script.turn_on_newlab_pc:
+  emulated_hue_hidden: false
+  emulated_hue_name: "new lab computer"
+script.turn_off_newlab_pc:
+  emulated_hue_hidden: false
+  emulated_hue_name: "new lab computer off"
+script.turn_on_lab_pc:
+  emulated_hue_hidden: false
+  emulated_hue_name: "lab computer"
+script.turn_off_lab_pc:
+  emulated_hue_hidden: false
+  emulated_hue_name: "lab computer off"
+script.turn_on_jdesktop_pc:
+  emulated_hue_hidden: false
+  emulated_hue_name: "desktop computer"
+script.turn_off_jdesktop_pc:
+  emulated_hue_hidden: false
+  emulated_hue_name: "desktop computer off"
+script.turn_on_gym_tv:
+  emulated_hue_hidden: false
+  emulated_hue_name: "gym television"
+script.turn_off_gym_tv:
+  emulated_hue_hidden: false
+  emulated_hue_name: "gym television off"
+
+#
+#  WeatherUnderground Customizations
+#
+sensor.pws_station_id:
+  friendly_name: PWS Station ID
+  icon: mdi:fingerprint
+sensor.pws_location:
+  friendly_name: Location
+  icon: mdi:earth
+sensor.pws_observation_time:
+  friendly_name: Observation Time
+  icon: mdi:calendar-clock
+sensor.pws_relative_humidity:
+  friendly_name: Relative Humidity
+  icon: mdi:water-percent
+sensor.pws_feelslike_f:
+  friendly_name: Feels Like F
+  icon: mdi:account-alert
+sensor.pws_temp_f:
+  friendly_name: Temperature F
+  icon: mdi:thermometer
+sensor.pws_precip_today_in:
+  friendly_name: Precip Today in
+  icon: mdi:water
+sensor.pws_wind_mph:
+  friendly_name: Sustained Wind Speed MPH
+  icon: mdi:weather-windy
+#
+#  Alarm Customizations
+#
+sensor.entry_burglar:
+  friendly_name: Entry Motion
+  icon: mdi:run-fast
+sensor.den_burglar:
+  friendly_name: Den Motion
+  icon: mdi:run-fast
+sensor.basement_burglar:
+  friendly_name: Basement Motion
+  icon: mdi:run-fast
+sensor.basement2_burglar:
+  friendly_name: Media motion
+  icon: mdi:run-fast
+sensor.kitchen_burglar:
+  friendly_name: Kitchen Motion
+  icon: mdi:run-fast
+binary_sensor.basement_sound:
+  friendly_name: Basement Sound
+  icon: mdi:surround-sound
+sensor.basement_camera_sensor:
+  friendly_name: Basement Camera Sensor
+  icon: mdi:run-fast
+sensor.basement_camera_motion:
+  friendly_name: Basement Camera Motion Messages
+  icon: mdi:clipboard-text
+sensor.total_basement_motion:
+  friendly_name: All Basement Motion
+  icon: mdi:run-fast
+#sensor.ffmpeg_noise_status:
+#  friendly_name: FFmpeg Noise Status
+#  icon: mdi:ear-hearing
+#
+#  Nest Customizations
+#
+binary_sensor.hallway_thermostat_has_leaf:
+  friendly_name: Green Mode
+  icon: mdi:thermostat
+binary_sensor.hallway_thermostat_is_using_emergency_heat:
+  friendly_name: Emergency Heat
+  icon: mdi:thermostat
+binary_sensor.hallway_thermostat_online:
+  friendly_name: Thermostat Online
+  icon: mdi:thermostat
+#
+#  Binary Sensor Customizations
+#
+binary_sensor.basement_sensor:
+  friendly_name: Basement MultiSensor Status
+  icon: mdi:toggle-switch
+binary_sensor.basement2_sensor:
+  friendly_name: Media MultiSensor Status
+  icon: mdi:toggle-switch
+binary_sensor.entry_sensor:
+  friendly_name: Entry MultiSensor Status
+  icon: mdi:toggle-switch
+binary_sensor.den_sensor:
+  friendly_name: Den MultiSensor Status
+  icon: mdi:toggle-switch
+binary_sensor.kitchen_sensor:
+  friendly_name: Kitchen MultiSensor Status
+  icon: mdi:toggle-switch
+binary_sensor.gwink:
+  friendly_name: Wink Hub Status
+  icon: mdi:toggle-switch
+#
+#  Battery Customizations
+#
+#sensor.note_4_battery:
+#  friendly_name: Note 4 Battery Level
+#  icon: mdi:battery-unknown
+#sensor.nexus_5x_battery:
+#  friendly_name: Nexus 5x Battery Level
+#  icon: mdi:battery-unknown
+#
+#  Wifi Locator Customization
+#
+sensor.jay_wifi_locator:
+  friendly_name: JayIn
+  icon: mdi:wifi
+#
+#  Icon Customizations for Family Locators
+#
+group.jay:
+  friendly_name: Jay
+  icon: mdi:map-marker
+group.lily:
+  friendly_name: Lily
+  icon: mdi:map-marker
+group.madeline:
+  friendly_name: Madeline
+  icon: mdi:map-marker
+#
+#  Camera Power Customizations
+#
+switch.living_room_camera_power_switch:
+  friendly_name: Master Camera Power
+  icon: mdi:power-socket-us
+switch.basement_phone_power_switch:
+  friendly_name: Storage Camera Power
+  icon: mdi:power-socket-us
+
+switch.rainmachine_switch:
+  friendly_name: Rain Machine
+  icon: mdi:weather-rainy
+
+switch.hkmaster_switch:
+  friendly_name: Master SoundSticks
+  icon: mdi:power-socket-us
+
+switch.zpower_strip_switch_2:
+  friendly_name: "Basement Camera Plug"
+  icon: mdi:power-socket-us
+
+switch.zpower_strip_switch_3:
+  friendly_name: "Basement Table Lamp Plug"
+  icon: mdi:power-socket-us
+
+switch.zpower_strip_switch_4:
+  friendly_name: "Empty"
+  icon: mdi:power-socket-us
+
+switch.zpower_strip_switch_5:
+  friendly_name: "Wink Plug"
+  icon: mdi:power-socket-us
+
+device_tracker.tile_bbcc7226a36f4551:
+  friendly_name: "tile keys"
+  icon: mdi:car-key
+
+device_tracker.tile_da8334d21ec24ab2:
+  friendly_name: "Car"
+  icon: mdi:car-hatchback
+
+device_tracker.jays7_galaxy_s7:
+  friendly_name: "Jays S9"
+  icon: mdi:cellphone-android
+
+device_tracker.tile_p6592b29a51b689a4f4217c1f4100d865:
+  friendly_name: "Jays S9 Tile"
+  icon: mdi:cellphone-android
+
+device_tracker.lilygarrsiphone:
+  friendly_name: "Lilys iPhone"
+  icon: mdi:cellphone-iphone
+
+device_tracker.lilysapplewatch:
+  friendly_name: "Lilys Apple Watch"
+  icon: mdi:watch-variant
+
+device_tracker.madelinrsiphone:
+  friendly_name: "Maddie Rose iPhone"
+  icon: mdi:cellphone-iphone
+
+device_tracker.madelinplewatch:
+  friendly_name: "Maddies Apple Watch"
+  icon: mdi:watch-variant
+
+device_tracker.madelinesiphone:
+  friendly_name: "Maddies iPhone"
+  icon: mdi:cellphone-iphone
+
+media_player.snapcast_client_b8aeed72fc2c:
+  friendly_name: "Snapcast Client Media Room"
+  icon: mdi:speaker

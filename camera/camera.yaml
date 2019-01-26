@@ -1,0 +1,17 @@
+- platform: zoneminder
+- platform: ring
+- platform: generic
+  name: Grafana_Temps
+  still_image_url: 'http://192.168.1.101:3000/render/d-solo/FE9RdQLmz/home-stats?refresh=15m&panelId=6&orgId=1&tab=time%20range&width=1000&height=500&tz=America%2FDenver'
+  username: !secret grafana_user
+  password: !secret grafana_pass
+- platform: generic
+  name: Grafana_Current_Outdoor_Temp
+  still_image_url: 'http://192.168.1.101:3000/render/d-solo/FE9RdQLmz/home-stats?refresh=15m&panelId=2&orgId=1&width=1000&height=500&tz=America%2FDenver'
+  username: !secret grafana_user
+  password: !secret grafana_pass
+- platform: generic
+  name: Grafana_Current_Indoor_Temp
+  still_image_url: 'http://192.168.1.101:3000/render/d-solo/FE9RdQLmz/home-stats?refresh=15m&panelId=4&orgId=1&width=1000&height=500&tz=America%2FDenver'
+  username: !secret grafana_user
+  password: !secret grafana_pass

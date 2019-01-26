@@ -1,0 +1,226 @@
+zwave_reset:
+  sequence:
+    - service: zwave.stop_network
+    - delay: "00:00:30"
+    - service: zwave.soft_reset
+
+zwave_healer:
+  sequence:
+    - service: zwave.heal_network
+    - delay: "00:00:30"
+    - service: zwave.start_network
+
+basement_lights_on:
+  sequence:
+    - service: light.turn_on
+      entity_id:
+        - light.basement_3way_dimmer_level
+        - light.basement_wall
+        - light.basement_cabinet
+    - service: switch.turn_on
+      entity_id: switch.basement_stairs_switch
+
+motion_timer:
+  sequence:
+    - service: script.turn_off
+      data:
+        entity_id: script.motion_timer_off
+    - service: input_boolean.turn_on
+      data:
+        entity_id: input_boolean.basement_camera_motion_bool
+    - service: script.turn_on
+      data:
+        entity_id: script.motion_timer_off
+
+motion_timer_off:
+  sequence:
+    - delay:
+        minutes: 10
+    - service: input_boolean.turn_off
+      data:
+        entity_id: input_boolean.basement_camera_motion_bool
+
+#play_xmas_channel:
+#  sequence:
+#    - service: shell_command.play_xmas_channel
+
+#play_absolute_xmas:
+#  sequence:
+#    - service: shell_command.play_absolute_xmas
+
+stop_mpd:
+  sequence:
+    - service: shell_command.stop_mpd
+
+play_classic_rock_109:
+  sequence:
+    - service: shell_command.play_classic_rock_109
+
+#play_holiday_standards:
+#  sequence:
+#    - service: shell_command.play_holiday_standards
+
+play_prime_classic_rock:
+  sequence:
+    - service: shell_command.play_prime_classic_rock
+
+turn_on_lr_pc:
+  sequence:
+    - service: shell_command.turn_on_lr_pc
+
+turn_off_lr_pc:
+  sequence:
+    - service: shell_command.turn_off_lr_pc
+
+turn_on_newlab_pc:
+  sequence:
+    - service: shell_command.turn_on_newlab_pc
+
+turn_off_newlab_pc:
+  sequence:
+    - service: shell_command.turn_off_newlab_pc
+
+turn_on_lab_pc:
+  sequence:
+    - service: shell_command.turn_on_lab_pc
+
+turn_off_lab_pc:
+  sequence:
+    - service: shell_command.turn_off_lab_pc
+
+turn_on_jdesktop_pc:
+  sequence:
+    - service: shell_command.turn_on_jdesktop_pc
+
+turn_off_jdesktop_pc:
+  sequence:
+    - service: shell_command.turn_off_jdesktop_pc
+
+turn_on_gym_tv:
+  sequence:
+    - service: shell_command.turn_on_gym_tv
+
+turn_off_gym_tv:
+  sequence:
+    - service: shell_command.turn_off_gym_tv
+
+dim_master_lights:
+  sequence:
+    - service: light.turn_on
+      data_template:
+        entity_id: "{{ entity_id }}"
+        brightness: "{{ states[entity_id.split('.')[0]][entity_id.split('.')[1]].attributes.brightness | int - 1 | int }}"
+
+dim_master_left_ns_lights:
+  sequence:
+    - service: light.turn_on
+      data_template:
+        entity_id: "{{ entity_id }}"
+        brightness: "{{ states[entity_id.split('.')[0]][entity_id.split('.')[1]].attributes.brightness | int - 1 | int }}"
+
+dim_master_right_ns_lights:
+  sequence:
+    - service: light.turn_on
+      data_template:
+        entity_id: "{{ entity_id }}"
+        brightness: "{{ states[entity_id.split('.')[0]][entity_id.split('.')[1]].attributes.brightness | int - 1 | int }}"
+
+dim_master_corner_lights:
+  sequence:
+    - service: light.turn_on
+      data_template:
+        entity_id: "{{ entity_id }}"
+        brightness: "{{ states[entity_id.split('.')[0]][entity_id.split('.')[1]].attributes.brightness | int - 1 | int }}"
+
+brighten_front_porch:
+  sequence:
+    - service: light.turn_on
+      data_template:
+        entity_id: "{{ entity_id }}"
+        brightness: "{{ states[entity_id.split('.')[0]][entity_id.split('.')[1]].attributes.brightness | int + 2 | int }}"
+
+open_garage_door:
+  alias: Open Garage Door
+  sequence:
+  - data:
+      entity_id: switch.nodemcu_single_garage_remote_button
+    service: switch.turn_off
+  - data:
+      entity_id: switch.nodemcu_single_garage_remote_button
+    service: switch.turn_on
+  - delay: '00:00:01'
+  - data:
+      entity_id: switch.nodemcu_single_garage_remote_button
+    service: switch.turn_off
+
+close_garage_door:
+  alias: Close Garage Door
+  sequence:
+  - data:
+      entity_id: switch.nodemcu_single_garage_remote_button
+    service: switch.turn_off
+  - delay: '00:00:01'
+  - data:
+      entity_id: switch.nodemcu_single_garage_remote_button
+    service: switch.turn_on
+  - delay: '00:00:01'
+  - data:
+      entity_id: switch.nodemcu_single_garage_remote_button
+    service: switch.turn_off
+
+stop_garage_door:
+  alias: Stop Garage Door
+  sequence:
+  - data:
+      entity_id: switch.nodemcu_single_garage_remote_button
+    service: switch.turn_off
+  - data:
+      entity_id: switch.nodemcu_single_garage_remote_button
+    service: switch.turn_on
+  - delay: '00:00:05'
+  - data:
+      entity_id: switch.nodemcu_single_garage_remote_button
+    service: switch.turn_off
+
+open_garage_door_main:
+  alias: Open Garage Door
+  sequence:
+  - data:
+      entity_id: switch.nodemcu_double_garage_remote_button
+    service: switch.turn_off
+  - data:
+      entity_id: switch.nodemcu_double_garage_remote_button
+    service: switch.turn_on
+  - delay: '00:00:01'
+  - data:
+      entity_id: switch.nodemcu_double_garage_remote_button
+    service: switch.turn_off
+
+close_garage_door_main:
+  alias: Close Garage Door
+  sequence:
+  - data:
+      entity_id: switch.nodemcu_double_garage_remote_button
+    service: switch.turn_off
+  - delay: '00:00:01'
+  - data:
+      entity_id: switch.nodemcu_double_garage_remote_button
+    service: switch.turn_on
+  - delay: '00:00:01'
+  - data:
+      entity_id: switch.nodemcu_double_garage_remote_button
+    service: switch.turn_off
+
+stop_garage_door_main:
+  alias: Stop Garage Door
+  sequence:
+  - data:
+      entity_id: switch.nodemcu_double_garage_remote_button
+    service: switch.turn_off
+  - data:
+      entity_id: switch.nodemcu_double_garage_remote_button
+    service: switch.turn_on
+  - delay: '00:00:05'
+  - data:
+      entity_id: switch.nodemcu_double_garage_remote_button
+    service: switch.turn_off

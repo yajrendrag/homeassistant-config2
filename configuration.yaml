@@ -1,0 +1,358 @@
+
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: Gardner
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret ha_latitude
+  longitude: !secret ha_longitude
+  elevation: 1944
+  # C for Celsius, F for Fahrenheit
+  unit_system: imperial
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: America/Denver
+  customize: !include customize.yaml
+  auth_providers:
+    - type: homeassistant
+#    - type: trusted_networks
+
+# View all events in a logbook
+logbook:
+
+
+# Checks for available updates
+updater:
+
+# Show links to resources in log and frontend
+#introduction:
+
+# Discover some devices automatically
+discovery:
+  ignore:
+    - roku
+    - samsung_tv
+#    - igd
+
+#panel_iframe:
+#  config:
+#    title: Configurator
+#    icon: mdi:wrench
+#    url: http://192.168.1.117:3218
+
+config:
+
+zoneminder:
+  host: 192.168.1.165
+  path: /zm/
+  path_zms: /zm/cgi-bin/nph-zms
+  username: !secret blue
+  password: !secret bluep
+
+auth:
+
+python_script:
+
+http:
+#  api_password: !secret http_pass
+#  ssl_certificate: !secret ha_ssl_cert
+#  ssl_key: !secret ha_ssl_key
+#  base_url: !secret ha_base_url
+#  trusted_networks:
+#    - 192.168.1.0/24
+
+tts:
+  - platform: google
+    cache: true
+    cache_dir: /tmp/tts
+    time_memory: 300
+
+hue:
+  bridges:
+    - host: 192.168.1.137
+      allow_unreachable: true
+      allow_hue_groups: false
+      
+media_player:
+  - platform: openhome
+  - platform: mpd
+    host: 192.168.1.100
+  - platform: snapcast
+    host: 192.168.1.100
+
+# sonos:
+#  media_player:
+#    hosts:
+#      - 192.168.1.117
+#      - 192.168.1.153
+
+wink:
+  email: !secret wink_email
+  password: !secret wink_pass
+  client_id: !secret wink_client_id
+  client_secret: !secret wink_client_secret
+
+ring:
+  username: !secret ring
+  password: !secret ringp
+
+zwave:
+  usb_path: /dev/ttyACM0
+#  config_path: /srv/jhass/src/python-openzwave/openzwave/config
+#  config_path: /srv/jhass/lib/python3.6/site-packages/python_openzwave/ozw_config/config
+  config_path: /srv/jhass/lib/python3.6/site-packages/python_openzwave/ozw_config
+  autoheal: False
+#  new_entity_ids: true
+
+notify:
+  platform: pushbullet
+  api_key: !secret notify_api
+
+nest:
+  client_id: !secret nest_client_id
+  client_secret: !secret nest_client_secret
+
+cover:
+  - platform: myq
+    name: Garage Door
+    username: !secret myq_user
+    password: !secret myq_pass
+    type: liftmaster
+  - platform: template
+    covers:
+      nodemcu_single_garage_cover:
+        friendly_name: "NodeMCU Single Garage Door"
+        open_cover:
+          service: script.open_garage_door
+        close_cover:
+          service: script.close_garage_door
+        stop_cover:
+          service: script.stop_garage_door
+        icon_template: >-
+          {% if is_state("binary_sensor.nodemcu_single_garage_status", "on") %}
+            mdi:garage
+          {% elif is_state("binary_sensor.nodemcu_single_garage_status", "off") %}
+            mdi:garage-open
+          {% else %}
+            mdi:garage-alert
+          {% endif %}
+        value_template: >-
+          {% if is_state("binary_sensor.nodemcu_single_garage_status", "on") %}
+            Closed
+          {% elif is_state("binary_sensor.nodemcu_single_garage_status", "off") %}
+            Open
+          {% else %}
+            Unknown
+          {% endif %}
+  - platform: template
+    covers:
+      nodemcu_double_garage_cover:
+        friendly_name: "NodeMCU Double Garage Door"
+        open_cover:
+          service: script.open_garage_door_main
+        close_cover:
+          service: script.close_garage_door_main
+        stop_cover:
+          service: script.stop_garage_door_main
+        icon_template: >-
+          {% if is_state("binary_sensor.nodemcu_main_garage_status", "on") %}
+            mdi:garage
+          {% elif is_state("binary_sensor.nodemcu_main_garage_status", "off") %}
+            mdi:garage-open
+          {% else %}
+            mdi:garage-alert
+          {% endif %}
+        value_template: >-
+          {% if is_state("binary_sensor.nodemcu_main_garage_status", "on") %}
+            Closed
+          {% elif is_state("binary_sensor.nodemcu_main_garage_status", "off") %}
+            Open
+          {% else %}
+            Unknown
+          {% endif %}
+
+shell_command:
+  motion_auto_off: /usr/bin/python3 /home/jhass/auto-motion.py
+  motion_auto_on: /usr/bin/python3 /home/jhass/auto-motion-on.py
+  den_detect_on: /usr/bin/python3 /home/jhass/den-detection-on.py
+  den_detect_off: /usr/bin/python3 /home/jhass/den-detection-off.py
+  reload_ffmpeg: /usr/bin/python3 /home/jhass/reload-ffmpeg.py
+  process_mpd_data: /home/jhass/.homeassistant/shell_commands/processmpd.sh {{ mpd_data }}
+  init_media_sensor: /usr/bin/python3 /home/jhass/media-burg.py
+  #play_absolute_xmas: /home/jhass/.homeassistant/shell_commands/play-absolute-xmas.sh
+  #play_xmas_channel: /home/jhass/.homeassistant/shell_commands/play-xmas-channel.sh
+  stop_mpd: /home/jhass/.homeassistant/shell_commands/stop-mpd.sh
+  play_classic_rock_109: /home/jhass/.homeassistant/shell_commands/play-classic-rock-109.sh
+  #play_holiday_standards: /home/jhass/.homeassistant/shell_commands/play-holiday-standards.sh
+  play_prime_classic_rock: /home/jhass/.homeassistant/shell_commands/play-prime-classic-rock.sh
+  turn_on_lr_pc: /usr/bin/python3 /home/jhass/livingroom-pc.py
+  turn_off_lr_pc: /usr/bin/python3 /home/jhass/livingroom-pc-off.py
+  turn_on_newlab_pc: /usr/bin/python3 /home/jhass/newlab-pc.py
+  turn_off_newlab_pc: /usr/bin/python3 /home/jhass/newlab-pc-off.py
+  turn_on_lab_pc: /usr/bin/python3 /home/jhass/lab-pc.py
+  turn_off_lab_pc: /usr/bin/python3 /home/jhass/lab-pc-off.py
+  turn_on_jdesktop_pc: /usr/bin/python3 /home/jhass/jay-desktop-pc.py
+  turn_off_jdesktop_pc: /usr/bin/python3 /home/jhass/jay-desktop-pc-off.py
+  turn_on_gym_tv: /usr/bin/python3 /home/jhass/gym-tv.py
+  turn_off_gym_tv: /usr/bin/python3 /home/jhass/gym-tv-off.py
+
+mqtt:
+  broker: !secret mqtt_broker
+  port: 1883
+  client_id: jay-ha
+  keepalive: 60
+  username: !secret mqtt_user
+  password: !secret mqtt_pass
+  discovery: true
+
+mqtt_statestream:
+  base_topic: homeassistant
+  publish_attributes: true
+  publish_timestamps: true
+  include:
+#    domains:
+#      - ffmpeg
+#      - media_player
+    entities:
+#      - binary_sensor.basement_sound
+      - media_player.mpd
+
+owntracks:
+  mqtt_topic: owntracks/#
+  events_only: true
+
+asuswrt:
+  host: 192.168.1.1
+  username: !secret ngear
+  ssh_key: !secret asuswrt_ssh_key
+  port: 22
+
+device_tracker:
+#  - platform: owntracks
+#    consider_home: 180
+#  - platform: mqtt
+#    devices:
+#      jay_note_4: /location/jay
+#      jayn5_nexus_5x: /location/jayn5
+#      jays7_galaxy_s7: /location/jays7
+#  - platform: asuswrt
+#    consider_home: 180
+#    host: 192.168.1.1
+#    username: !secret ngear
+#    ssh_key: !secret asuswrt_ssh_key
+#    port: 22
+#    new_device_defaults:
+#      track_new_devices: false
+#      hide_if_away: false
+#  - platform: nmap_tracker
+#    consider_home: 180
+#    hosts:
+#      - 192.168.1.147
+#      - 192.168.1.154
+#      - 192.168.1.146
+#      - 192.168.1.159
+#      - 192.168.1.135
+#    home_interval: 15
+#    scan_options: " --privileged -p 62078 -sS "
+  - platform: tile
+    consider_home: 600
+    username: !secret tile_user
+    password: !secret tile_pw
+
+asterisk_mbox:
+  password: !secret astmbox-pw
+  host: !secret astmbox-host
+  port: !secret astmbox-port
+
+input_select:
+  jay_room_tracker:
+    name: "Jay is in room"
+    options:
+      - den
+      - master
+      - livingroom
+      - kitchen
+      - basement
+      - gym
+    icon: mdi:home
+
+emulated_hue:
+  expose_by_default: false
+
+group: !include groups.yaml
+
+automation: !include_dir_merge_list automation/
+
+scene: !include scenes.yaml
+
+script: !include scripts.yaml
+
+camera: !include_dir_merge_list camera/
+
+zone: !include_dir_merge_list zone/
+
+sensor: !include_dir_merge_list sensors/
+
+input_boolean: !include_dir_merge_named input_booleans/
+
+logger:
+  default: error
+  logs:
+    homeassistant.components.asterisk_mbox: debug
+    homeassistant.components.mailbox: debug
+    homeassistant.components.sensor.wunderground: debug
+    homeassistant.components.http.auth: info
+
+ffmpeg:
+  ffmpeg_bin: /usr/bin/ffmpeg
+
+binary_sensor:
+  - platform: nest
+    monitored_conditions:
+      - 'online'
+      - 'is_using_emergency_heat'
+  - platform: ffmpeg_noise
+    name: basement_sound
+    input: -rtsp_transport tcp -i rtsp://admin:madlil54@192.168.1.214:554/cam/realmonitor?channel=1&subtype=0&unicast=true&proto=Onvif
+    peak: -25
+    duration: 1
+  - platform: ring
+
+timer:
+  porch:
+    duration: '00:05:00'
+
+# Allows you to issue voice commands from the frontend
+conversation:
+
+# Enables the frontend
+frontend:
+
+# Enables support for tracking state changes over time.
+history:
+
+# Track the sun
+sun:
+
+map:
+
+recorder:
+  db_url: !secret recorder_db_url
+  purge_interval: 2
+  purge_keep_days: 14
+
+influxdb:
+  host: 192.168.1.101
+  include:
+    entities:
+      - sensor.hallway_thermostat_temperature
+      - sensor.den_temperature
+      - sensor.kitchen_temperature
+      - sensor.basement2_temperature
+      - sensor.entry_temperature
+      - sensor.jay_home
+      - sensor.pws_temp_f
+      - group.jay
+
+weather:
+  - platform: darksky
+    api_key: !secret darksky_api
+    mode: daily

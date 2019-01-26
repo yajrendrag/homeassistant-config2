@@ -1,0 +1,149 @@
+#Turn on living room lights & den corner in late pm
+- alias: 'LR lights on late pm'
+  trigger:
+    platform: sun
+    event: sunset
+    offset: "-02:30:00"
+  action:
+    service: light.turn_on
+    entity_id:
+      - light.living_room_c_table_level
+      - light.living_room_corner_level
+      - light.den_corner
+
+#Turn on living room reading lamp in evening
+- alias: 'turn on living room reading lamp on in evening'
+  trigger:
+    platform: sun
+    event: sunset
+    offset: "-01:00:00"
+  action:
+    service: switch.turn_on
+    entity_id: switch.living_room_reading_lamp_switch
+
+#Turn off living room reading lamp at bedtime
+- alias: 'turn off living room reading lamp at bedtime'
+  trigger:
+    platform: time
+    at: '23:00:00'
+  action:
+    service: switch.turn_off
+    entity_id: switch.living_room_reading_lamp_switch
+
+#turn on entryway light if too dark and motion
+- alias: 'turn on entryway light if too dark and motion'
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.entry_burglar
+    above: '2'
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.entry_luminance
+      below: '25'
+  action:
+    service: scene.turn_on
+    entity_id: scene.entry_hall_on
+
+#turn off entryway lights when no presence detected
+- alias: 'turn off entryway lights based when no presence detected'
+  trigger:
+    platform: state
+    entity_id: sensor.entry_burglar
+    to: '0'
+  action:
+    service: light.turn_off
+    entity_id: light.entry_hall_level
+
+#brighten front porch lights slowly between sunset and sunse + 2 hours
+
+- alias: 'Light 60 min fade-in to 50% starting half an hour before sunset'
+  trigger:
+    platform: sun
+    event: sunset
+    offset: "-00:30:00"
+  action:
+    - service: python_script.zwave_fade
+      data:
+        entity_id: light.front_porch_level  # Entity ID to fade
+        transition: 3600  # Seconds to go from current to end brightness
+        brightness: 128  # Brightness to end at
+        brightness_pct: 50  # Brightness to end at as a percentage
+
+- alias: 'Light 15 min fade-in to 33% starting at midnight'
+  trigger:
+    platform: time
+    at: '00:01:00'
+  action:
+    - service: python_script.zwave_fade
+      data:
+        entity_id: light.front_porch_level  # Entity ID to fade
+        transition: 900  # Seconds to go from current to end brightness
+        brightness: 84  # Brightness to end at
+        brightness_pct: 33  # Brightness to end at as a percentage
+
+- alias: 'Light 60 min fade-in to 0% starting an hour before sunrise'
+  trigger:
+    platform: sun
+    event: sunrise
+    offset: "-00:60:00"
+  action:
+    - service: python_script.zwave_fade
+      data:
+        entity_id: light.front_porch_level  # Entity ID to fade
+        transition: 3600  # Seconds to go from current to end brightness
+        brightness: 0  # Brightness to end at
+        brightness_pct: 0  # Brightness to end at as a percentage
+
+#turn off front porch lights in morning
+- alias: 'turn off front porch lights in morning'
+  trigger:
+    platform: sun
+    event: sunrise
+    offset: "00:02:00"
+  action:
+    service: light.turn_off
+    entity_id:
+      - light.front_porch_level
+
+#turn on front porch lights at sunset'
+#- alias: 'turn on front porch lights at sunset'
+#  trigger:
+#    platform: sun
+#    event: sunset
+#    offset: "-0:40:00"
+#  action:
+#    - service: scene.turn_on
+#      entity_id: scene.front_porch_dim
+#    - service: scene.turn_on
+#      entity_id: scene.front_porch_dim
+
+#- alias: 'porch timer control'
+- action:
+  - service: scene.turn_on
+    entity_id: scene.front_porch_full
+  - service: timer.start
+    entity_id: timer.porch
+  alias: PorchTimerswitch
+  id: 'PorchTimerswitch'
+# Timer is started when the ring doorbell senses motion
+  trigger:
+    platform: state
+    entity_id: binary_sensor.ring_front_door_motion
+    to: 'on'
+  condition:
+    condition: sun
+    after: sunset
+
+# When timer ends restore porch lights to dim state
+- action:
+  - service: scene.turn_on
+    entity_id: scene.front_porch_dim
+  - service: scene.turn_on
+    entity_id: scene.front_porch_dim
+  alias: Timerstop
+  id: 'Timerstop'
+  trigger:
+    platform: event
+    event_type: timer.finished
+    event_data:
+      entity_id: timer.porch

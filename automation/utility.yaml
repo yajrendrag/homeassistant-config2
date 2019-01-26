@@ -1,0 +1,308 @@
+##############################
+#                            #
+#  MULTIROOM LIGHT CONTROLS  #
+#                            #
+##############################
+
+#Turn off lights at midnight
+- alias: 'lights off at midnight'
+  trigger:
+    platform: time
+    at: '23:59:00'
+  action:
+    service: light.turn_off
+    entity_id:
+      - light.master
+      - light.master_corner
+      - light.living_room_c_table_level
+      - light.living_room_corner_level
+      - light.den_corner
+
+#Turn off any lights in early morning
+- alias: 'any lights off in early am'
+  trigger:
+    platform: time
+    at: '02:15:00'
+  action:
+    service: homeassistant.turn_off
+    entity_id:
+      - light.entry_hall_level
+      - light.front_hall_table_level
+      - light.office
+      - light.lightstrip
+      - switch.kitchen_switch
+      - light.living_room
+      - light.basement_3way_dimmer_level
+      - light.basement_cabinet
+      - light.basement_wall
+      - switch.basement_stairs_switch
+      - light.lightstrip
+      - light.dining_room_level
+      - light.tiffany_level
+      - light.desk_drawer_level
+
+##############################
+#                            #
+#      CAMERA AUTOMATION     #
+#                            #
+##############################
+
+#Turn on living room camera switch based on battery levels
+#- alias: 'lr camera switch on'
+#  trigger:
+#    platform: template
+#    value_template: "{% if states ('sensor.note_4_battery') | int < 80 %}true{% endif %}"
+#  action:
+#    service: switch.turn_on
+#    entity_id: switch.living_room_camera_power_switch
+
+#Turn off living room camera switch based on battery levels
+#- alias: 'lr camera switch off'
+#  trigger:
+#    platform: template
+#    value_template: "{% if states ('sensor.note_4_battery') | int > 96 %}true{% endif %}"
+#  action:
+#    service: switch.turn_off
+#    entity_id: switch.living_room_camera_power_switch
+
+#Turn on master bedroom phone power switch based on battery levels
+#- alias: 'master phone pwr switch on'
+#  trigger:
+#    platform: template
+#    value_template: "{% if states ('sensor.nexus_5x_battery') | int < 72 %}true{% endif %}"
+#  action:
+#    service: switch.turn_on
+#    entity_id: switch.basement_phone_power_switch
+
+#Turn off master bedroom phone power switch based on battery levels
+#- alias: 'master phone pwr switch off'
+#  trigger:
+#    platform: template
+#    value_template: "{% if states ('sensor.nexus_5x_battery') | int  > 90 %}true{% endif %}"
+#  action:
+#    service: switch.turn_off
+#    entity_id: switch.basement_phone_power_switch
+
+#- alias: 'reload ffmpeg noise every 30 minutes'
+#  trigger:
+#    platform: time
+#    minutes: '/30'
+#    seconds: '00'
+#  action:
+#    service: shell_command.reload_ffmpeg
+##############################
+#                            #
+#       ffmpeg restart       #
+#                            #
+##############################
+
+- alias: 'restart ffmpeg if it stops'
+  trigger:
+    - platform: event
+      event_type: system_log_event
+      event_data:
+        message: "FFmpeg isn't running!"
+    - platform: state
+      entity_id: binary_sensor.basement_sound
+      to: 'unavailable'
+  action:
+    - service: mqtt.publish
+      data:
+        topic: homeassistant/ffmpeg_noise
+        payload: "FFmpeg isn't running! Restarting..."
+    - service: ffmpeg.restart
+
+##############################
+#                            #
+#    UPDATER AUTOMATION      #
+#                            #
+##############################
+
+# updater notification
+- alias: 'Update Available Notifications'
+  trigger:
+    platform: state
+    entity_id: updater.updater
+  action:
+    service: notify.notify
+    data:
+      message: 'Update for Home Assistant is available.'
+
+# alternate updater notification
+- alias: 'alternate updater notifier'
+  trigger:
+    platform: template
+    value_template: "{% if states.sensor.installed_version != states.sensor.current_ha_version %}true{% endif %}"
+  action:
+    service: notify.notify
+    data:
+      message: 'Update for Home Assistant is available.'
+
+# Wink updater notification
+- alias: 'wink update needed notifier'
+  trigger:
+    platform: template
+    value_template: '{% if states.binary_sensor.gwink.attributes.update_needed == true %}true{%else%}false{%endif%}'
+  action:
+    service: notify.notify
+    data:
+      message: 'Update for Wink is available.'
+
+##############################
+#                            #
+#     NIGHTLY ZWAVE RESET    #
+#                            #
+##############################
+
+- alias: 'zwave soft reset at 2:30am'
+  trigger:
+    platform: time
+    at: '2:30:00'
+  action:
+    service: script.zwave_reset
+
+- alias: 'zwave heal at 2:33am'
+  trigger:
+    platform: time
+    at: '2:33:00'
+  action:
+    service: script.zwave_healer
+
+##############################
+#                            #
+# MOTION DETECTION NOTIFIER  #
+#                            #
+##############################
+
+- alias: 'motion detected'
+#  initial_state: False
+  trigger:
+  - platform: mqtt
+    topic: 'homeassistant/motion/basement'
+  - platform: mqtt
+    topic: 'homeassistant/motion/livingroom'
+  - platform: mqtt
+    topic: 'homeassistant/motion/kitchen'
+  - platform: mqtt
+    topic: 'homeassistant/motion/garage'
+  condition:
+    - condition: state
+      entity_id: group.family
+      state: 'not_home'
+  action:
+    service: notify.notify
+    data_template:
+      message: "motion detected: {{ trigger.payload_json['camera'] ~ ' ' ~ trigger.payload_json['time'] ~ ' ' ~ trigger.payload_json['date'] }}"
+
+- alias: 'family home - turn nest to home mode'
+  trigger:
+    platform: state
+    entity_id: group.family
+    to: 'home'
+  action:
+    service: nest.set_away_mode
+    data:
+      away_mode: home
+
+##############################
+#                            #
+#     Call Notification      #
+#                            #
+##############################
+
+- alias: 'send caller id notifications to pushbullet'
+  trigger:
+    platform: mqtt
+    topic: 'homeassistant/call-from'
+  action:
+    service: notify.notify
+    data_template:
+      message: >
+        You had a call from {{ trigger.payload_json['Caller-ID-Name']|replace('~',' ') ~ ', tel #: ' ~ trigger.payload_json['Caller-ID-Number'] }}
+        on {{ now().strftime("%A, %B %d, %Y at %I:%M%p" ) }}
+#        on {{ now().month ~ '/' ~now().day ~ ' @ ' ~ now().hour ~ ':' ~ now().minute }}
+
+##############################
+#                            #
+#  Reset Sprinkler Outlet    #
+#                            #
+##############################
+
+- alias: 'power off rain machine outlet'
+  trigger:
+    platform: time
+    at: '05:00:00'
+  action:
+    service: switch.turn_off
+    entity_id: switch.rainmachine
+
+- alias: 'power on rain machine outlet'
+  trigger:
+    platform: time
+    at: '05:01:00'
+  action:
+    service: switch.turn_on
+    entity_id: switch.rainmachine
+
+##############################
+#                            #
+# Capture Media Player Event #
+#                            #
+##############################
+
+- alias: 'capture mpd media player events'
+  trigger:
+    platform: event
+    event_type: state_changed
+    event_data:
+      entity_id: media_player.mpd
+  action:
+    - service: mqtt.publish
+      data_template:
+        topic: homeassistant/mpd
+        payload: "{{ trigger.event.data }}"
+    - service: shell_command.process_mpd_data
+      data_template:
+        mpd_data: "{{ '{old_state: ' ~ trigger.event.data['old_state']['attributes'] ~ ', ' ~ 'new_state: ' ~ trigger.event.data['new_state']['attributes'] ~ ', ' ~ 'time: ' ~ trigger.event.data['new_state']['last_updated']~'}' }}"
+
+- alias: 'initialize media burglar sensor to 0'
+  trigger:
+    platform: homeassistant
+    event: start
+  action:
+    - delay:
+        minutes: 3
+    - service: shell_command.init_media_sensor
+
+##############################
+#                            #
+#  MOTION AUTOMATION CONTROL #
+#                            #
+##############################
+
+#- alias: 'motion detection automation on'
+#  trigger:
+#    platform: state
+#    entity_id: device_tracker.jays7_galaxy_s7
+#    from: 'home'
+#    to: 'not_home'
+#    for:
+#      minutes: 5
+#  action:
+#    service: shell_command.motion_auto_on
+
+#- alias: 'motion detection automation off'
+#  trigger:
+#    - platform: state
+#      entity_id: device_tracker.jays7_galaxy_s7
+#      from: 'not_home'
+#      to: 'home'
+#      for:
+#        minutes: 2
+#    - platform: state
+#      entity_id: device_tracker.jays7_galaxy_s7
+#      to: 'den'
+#      for:
+#        minutes: 2
+#  action:
+#    service: shell_command.motion_auto_off

@@ -1,0 +1,78 @@
+#- platform: mqtt
+#  state_topic: "owntracks/jay/note 4"
+#  name: "Note 4 Battery"
+#  unit_of_measurement: "%"
+#  value_template: '{{ value_json.batt }}'
+#- platform: mqtt
+#  state_topic: "owntracks/jayn5/nexus 5x"
+#  name: "Nexus 5x Battery"
+#  unit_of_measurement: "%"
+#  value_template: '{{ value_json.batt }}'
+#- platform: mqtt
+#  state_topic: "owntracks/jays7/galaxy s7/event"
+#  name: "Jay Room Locator"
+#  value_template: '{{ value_json.event ~ " " ~ value_json.desc|replace("-","") }}'
+#- platform: mqtt_room
+#  device_id: 74278bdab64445208f0c720eaf059931-539-7
+#  name: 'Jay in which room'
+#  state_topic: 'room_presence'
+#  timeout: 5
+#  away_timeout: 0
+- platform: mqtt
+  state_topic: "gwifilocator/location/wifi-dc:ef:ca:6e:4e:70"
+  name: "Jay WiFi Locator 1"
+  value_template: '{{ value_json.location }}'
+- platform: mqtt
+#  state_topic: "gwifilocator/location/wifi-dc:ef:ca:6e:4e:70"
+  state_topic: "gwifilocator/location/bluetooth-d3:16:8a:6d:72:5d"
+  name: "Jay WiFi Locator"
+  value_template: '{{ value_json.location }}'
+- platform: mqtt
+  state_topic: "homeassistant/motion/basement"
+  name: "basement camera motion"
+  value_template: '{{ value_json.time ~ " " ~ value_json.date }}'
+- platform: template
+  sensors:
+    jay_home:
+      friendly_name: Jay Home
+      value_template: "{{ 'home' if states.input_boolean.jay_home is not none and states ('input_boolean.jay_home') == 'on' else 'not_home' }}"
+      entity_id: input_boolean.jay_home
+    maddie_home:
+      friendly_name: Maddie Home
+      value_template: "{{ 'home' if states.input_boolean.maddie_home is not none and states ('input_boolean.maddie_home') == 'on' else 'not_home' }}"
+      entity_id: input_boolean.maddie_home
+    lily_home:
+      friendly_name: Lily Home
+      value_template: "{{ 'home' if states.input_boolean.lily_home is not none and states ('input_boolean.lily_home') == 'on' else 'not_home' }}"
+      entity_id: input_boolean.lily_home
+    basement_camera_sensor:
+      friendly_name: basement camera sensor
+      value_template: "{{ 'off' if states.input_boolean.basement_camera_motion_bool is not none and states ('input_boolean.basement_camera_motion_bool') == 'off' else 'on' }}"
+      entity_id: input_boolean.basement_camera_motion_bool
+    total_basement_motion:
+      friendly_name: Motion Detected in basement
+      value_template: "{{ 'no motion' if (states('sensor.basement_camera_sensor') == 'off' and states('binary_sensor.basement_sound') == 'off' and states('sensor.basement_burglar') == '0' and states('sensor.basement2_burglar') == '0') else 'motion' }}"
+      entity_id:
+        - sensor.basement_camera_sensor
+        - binary_sensor.basement_sound
+        - sensor.basement_burglar
+        - sensor.basement2_burglar
+#    ffmpeg_noise_status:
+#      friendly_name: ffmpeg last triggered timer
+#      unit_of_measurement: 'seconds'
+#      value_template: "{{ 'expired' if states.binary_sensor.basement_sound.last_updated is not none and (as_timestamp(utcnow()) - as_timestamp(states.binary_sensor.basement_sound.last_updated)) | float > 2700.0 else 'not expired' }}"
+#      value_template: "{% if states.binary_sensor.basement_sound.last_updated is not none %} {{ as_timestamp(utcnow()) | int - as_timestamp(states.binary_sensor.basement_sound.last_updated) | int }} {% else %} 0 {% endif %}"
+#      entity_id:
+#        - sensor.basement_camera_sensor
+#        - binary_sensor.basement_sound
+#        - sensor.basement_burglar
+#    note_4_battery:
+#      friendly_name: Note 4 Battery
+#      value_template: "{{ states.device_tracker.jay_note_4.attributes.battery|default(-1)|int if states.device_tracker.jay_note_4 is not none }}"
+#      unit_of_measurement: '%'
+#      entity_id: device_tracker.jay_note_4
+  #  nexus_5x_battery:
+  #    friendly_name: Nexus 5x Battery
+  #    value_template: "{{ states.device_tracker.jayn5_nexus_5x.attributes.battery|default(-1)|int if states.device_tracker.jayn5_nexus_5x is not none }}"
+  #    unit_of_measurement: '%'
+  #    entity_id: device_tracker.jayn5_nexus_5x

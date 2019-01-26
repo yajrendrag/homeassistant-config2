@@ -1,0 +1,182 @@
+#Turn on basement corner light in late pm
+- alias: 'basement corner light in late pm'
+  trigger:
+    platform: time
+    at: '15:00:00'
+  action:
+    service: light.turn_on
+    entity_id:
+      - light.basement_corner_level
+
+#Turn on basement stairs light in late pm
+- alias: 'turn on basement stairs light in late pm'
+  trigger:
+    platform: sun
+    event: sunset
+    offset: "-02:00:00"
+  action:
+    service: switch.turn_on
+    entity_id: switch.basement_stairs_switch
+
+#Turn off basement corner light at 12:45am
+- alias: 'basement corner light off at 12:45am'
+  trigger:
+    platform: time
+    at: '00:45:00'
+  action:
+    service: light.turn_off
+    entity_id:
+      - light.basement_corner_level
+
+#Turn off basement lights in late pm
+- alias: 'turn off basement lights in late pm'
+  trigger:
+    platform: time
+    at: "01:00:00"
+  action:
+    service: homeassistant.turn_off
+    entity_id:
+      - switch.basement_stairs_switch
+      - light.basement_3way_dimmer_level
+      - light.basement_wall
+      - light.basement_cabinet
+      - light.lightstrip
+
+- alias: 'turn on basement lights if too dark and motion'
+  trigger:
+    platform: numeric_state
+    entity_id: sensor.basement_burglar
+    above: '3'
+  condition:
+    - condition: numeric_state
+      entity_id: sensor.basement_luminance
+      below: '25'
+  action:
+    - service: script.basement_lights_on
+    - service: shell_command.reload_ffmpeg
+
+#turn off basement lights if jay is not downstairs and kids not home
+- alias: 'turn off basement lights based on presence'
+  trigger:
+    - platform: state
+      entity_id: sensor.jay_wifi_locator
+      to: 'den'
+      for:
+        minutes: '5'
+    - platform: state
+      entity_id: sensor.jay_wifi_locator
+      to: 'livingroom'
+      for:
+        minutes: '5'
+    - platform: state
+      entity_id: sensor.jay_wifi_locator
+      to: 'kitchen'
+      for:
+        minutes: '5'
+    - platform: state
+      entity_id: sensor.jay_wifi_locator
+      to: 'master bedroom'
+      for:
+        minutes: '5'
+  condition:
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: sensor.total_basement_motion
+        state: 'no motion'
+#      - condition: state
+#        entity_id: binary_sensor.basement_sound
+#        state: 'off'
+      - condition: state
+        entity_id: group.kids
+        state: 'not_home'
+  action:
+    service: homeassistant.turn_off
+    entity_id:
+      - light.basement_3way_dimmer_level
+      - light.basement_cabinet
+      - light.basement_wall
+      - switch.basement_stairs_switch
+      - light.lightstrip
+
+#turn off basement lights if no motion and no one downstairs
+- alias: 'turn off basement lights based on motion & no presence'
+  trigger:
+    platform: state
+    entity_id: sensor.total_basement_motion #basement_camera_sensor
+    to: 'no motion' #'off'
+  condition:
+#    condition: and
+#    conditions:
+    condition: template
+    value_template: "{{ 'basement' not in states('sensor.jay_wifi_locator') }}"
+#      - condition: state#
+#        entity_id:  binary_sensor.basement_sound
+#        to: 'off'
+  action:
+    service: homeassistant.turn_off
+    entity_id:
+      - light.basement_3way_dimmer_level
+      - light.basement_cabinet
+      - light.basement_wall
+      - switch.basement_stairs_switch
+      - light.lightstrip
+
+#turn off basement lights if no one home
+- alias: 'turn off basement lights if no one home'
+  initial_state: false
+  trigger:
+    platform: state
+    entity_id: group.family
+    to: 'not_home'
+  action:
+    - service: homeassistant.turn_off
+      data:
+        entity_id:
+          - light.basement_3way_dimmer_level
+          - light.basement_cabinet
+          - light.basement_wall
+          - light.lightstrip
+    - service: nest.set_away_mode
+      data:
+        away_mode: away
+
+- alias: 'no motion countdown'
+  trigger:
+    platform: mqtt
+    topic: 'homeassistant/motion/basement'
+  action:
+    service: homeassistant.turn_on
+    entity_id: script.motion_timer
+
+- alias: 'toggle zpower switch 1'
+  trigger:
+    platform: state
+    entity_id: input_boolean.power_switch_1
+  action:
+    service: homeassistant.toggle
+    entity_id: switch.zpower_strip_switch_2
+
+- alias: 'toggle zpower switch 2'
+  trigger:
+    platform: state
+    entity_id: input_boolean.power_switch_2
+  action:
+    service: homeassistant.toggle
+    entity_id: switch.zpower_strip_switch_3
+
+- alias: 'toggle zpower switch 3'
+  trigger:
+    platform: state
+    entity_id: input_boolean.power_switch_3
+  action:
+    service: homeassistant.toggle
+    entity_id: switch.zpower_strip_switch_4
+
+- alias: 'toggle zpower switch 4'
+  trigger:
+    platform: state
+    entity_id: input_boolean.power_switch_4
+  action:
+    service: homeassistant.toggle
+    entity_id: switch.zpower_strip_switch_5
