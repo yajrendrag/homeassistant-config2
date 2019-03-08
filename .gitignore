@@ -6,10 +6,12 @@
 *.json
 *.txt
 *.pickle
+*.old
 certs
 www
 custom_components
 OZW_Log.txt
+weather.yaml
 home-assistant.log
 ha*.log
 home-assistant_v2.db
@@ -23,6 +25,7 @@ known_devices.yaml
 *.conf
 plex.conf
 phue.conf
+harmony*.conf
 harmony_media_room.conf
 pyozw.sqlite
 .*
@@ -34,4 +37,3 @@ shell_commands
 ip_bans.yaml
 .jay_gardners_us.tile.conf
 .jaygardnersus.tile.conf
-

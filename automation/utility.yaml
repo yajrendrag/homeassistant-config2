@@ -29,6 +29,9 @@
       - light.entry_hall_level
       - light.front_hall_table_level
       - light.office
+      - light.den_corner
+      - light.den
+      - light.den_window
       - light.lightstrip
       - switch.kitchen_switch
       - light.living_room
@@ -105,6 +108,7 @@
     - platform: state
       entity_id: binary_sensor.basement_sound
       to: 'unavailable'
+
   action:
     - service: mqtt.publish
       data:
@@ -139,14 +143,14 @@
       message: 'Update for Home Assistant is available.'
 
 # Wink updater notification
-- alias: 'wink update needed notifier'
-  trigger:
-    platform: template
-    value_template: '{% if states.binary_sensor.gwink.attributes.update_needed == true %}true{%else%}false{%endif%}'
-  action:
-    service: notify.notify
-    data:
-      message: 'Update for Wink is available.'
+#- alias: 'wink update needed notifier'
+#  trigger:
+#    platform: template
+#    value_template: '{% if states.binary_sensor.gwink.attributes.update_needed == true %}true{%else%}false{%endif%}'
+#  action:
+#    service: notify.notify
+#    data:
+#      message: 'Update for Wink is available.'
 
 ##############################
 #                            #
@@ -222,6 +226,15 @@
         on {{ now().strftime("%A, %B %d, %Y at %I:%M%p" ) }}
 #        on {{ now().month ~ '/' ~now().day ~ ' @ ' ~ now().hour ~ ':' ~ now().minute }}
 
+- alias: 'voicemail transcription notifier'
+  trigger:
+    platform : mqtt
+    topic: 'homeassistant/voicemail-message'
+  action:
+    service: notify.notify
+    data_template:
+      message: >
+        Voicemail message from {{ trigger.payload_json['callerid'] ~ ', tel #: ' ~ trigger.payload_json['number'] ~ '.  Message: ' ~ trigger.payload_json['message'] }}
 ##############################
 #                            #
 #  Reset Sprinkler Outlet    #
@@ -234,7 +247,7 @@
     at: '05:00:00'
   action:
     service: switch.turn_off
-    entity_id: switch.rainmachine
+    entity_id: switch.sprinkler
 
 - alias: 'power on rain machine outlet'
   trigger:
@@ -242,7 +255,7 @@
     at: '05:01:00'
   action:
     service: switch.turn_on
-    entity_id: switch.rainmachine
+    entity_id: switch.sprinkler
 
 ##############################
 #                            #

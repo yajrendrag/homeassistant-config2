@@ -48,6 +48,10 @@ light.front_hall_table_level:
   emulated_hue_hidden: false
   emulated_hue_name: "front hall table"
   friendly_name: "front hall table"
+light.basement_cabinet:
+  emulated_hue_name: "basement cabinet lamp"
+  emulated_hue_hidden: False
+  friendly_name: "basement cabinet lamp"
 #script.play_xmas_channel:
 #  emulated_hue_hidden: true
 #  emulated_hue_name: "christmas channel"
@@ -187,9 +191,9 @@ binary_sensor.den_sensor:
 binary_sensor.kitchen_sensor:
   friendly_name: Kitchen MultiSensor Status
   icon: mdi:toggle-switch
-binary_sensor.gwink:
-  friendly_name: Wink Hub Status
-  icon: mdi:toggle-switch
+#binary_sensor.gwink:
+#  friendly_name: Wink Hub Status
+#  icon: mdi:toggle-switch
 #
 #  Battery Customizations
 #
@@ -227,8 +231,8 @@ switch.basement_phone_power_switch:
   friendly_name: Storage Camera Power
   icon: mdi:power-socket-us
 
-switch.rainmachine_switch:
-  friendly_name: Rain Machine
+switch.sprinkler:
+  friendly_name: Sprinkler
   icon: mdi:weather-rainy
 
 switch.hkmaster_switch:
@@ -259,11 +263,11 @@ device_tracker.tile_da8334d21ec24ab2:
   friendly_name: "Car"
   icon: mdi:car-hatchback
 
-device_tracker.jays7_galaxy_s7:
+device_tracker.jay_galaxys9:
   friendly_name: "Jays S9"
   icon: mdi:cellphone-android
 
-device_tracker.tile_p6592b29a51b689a4f4217c1f4100d865:
+device_tracker.tile_p_6592b29a51b689a4f4217c1f4100d865:
   friendly_name: "Jays S9 Tile"
   icon: mdi:cellphone-android
 

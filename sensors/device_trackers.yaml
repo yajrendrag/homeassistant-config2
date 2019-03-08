@@ -57,6 +57,11 @@
         - binary_sensor.basement_sound
         - sensor.basement_burglar
         - sensor.basement2_burglar
+    outside_temp:
+      friendly_name: Outdoor temperature
+      unit_of_measurement: '°F'
+      value_template: "{{ state_attr('weather.openweathermap', 'temperature') }}"
+      entity_id: weather.openweathermap
 #    ffmpeg_noise_status:
 #      friendly_name: ffmpeg last triggered timer
 #      unit_of_measurement: 'seconds'

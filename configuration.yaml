@@ -70,7 +70,11 @@ hue:
     - host: 192.168.1.137
       allow_unreachable: true
       allow_hue_groups: false
-      
+light:
+  - platform: switch
+    name: basement_cabinet
+    entity_id: switch.zpower_strip_switch_3
+
 media_player:
   - platform: openhome
   - platform: mpd
@@ -84,11 +88,11 @@ media_player:
 #      - 192.168.1.117
 #      - 192.168.1.153
 
-wink:
-  email: !secret wink_email
-  password: !secret wink_pass
-  client_id: !secret wink_client_id
-  client_secret: !secret wink_client_secret
+#wink:
+#  email: !secret wink_email
+#  password: !secret wink_pass
+#  client_id: !secret wink_client_id
+#  client_secret: !secret wink_client_secret
 
 ring:
   username: !secret ring
@@ -109,10 +113,17 @@ notify:
 nest:
   client_id: !secret nest_client_id
   client_secret: !secret nest_client_secret
+  sensors:
+    monitored_conditions:
+      - temperature
+      - humidity
+      - operation_mode
+      - target
+      - hvac_state
 
 cover:
   - platform: myq
-    name: Garage Door
+#    name: Garage Door
     username: !secret myq_user
     password: !secret myq_pass
     type: liftmaster
@@ -217,7 +228,7 @@ mqtt_statestream:
 
 owntracks:
   mqtt_topic: owntracks/#
-  events_only: true
+#  events_only: true
 
 asuswrt:
   host: 192.168.1.1
@@ -226,41 +237,15 @@ asuswrt:
   port: 22
 
 device_tracker:
-#  - platform: owntracks
-#    consider_home: 180
-#  - platform: mqtt
-#    devices:
-#      jay_note_4: /location/jay
-#      jayn5_nexus_5x: /location/jayn5
-#      jays7_galaxy_s7: /location/jays7
-#  - platform: asuswrt
-#    consider_home: 180
-#    host: 192.168.1.1
-#    username: !secret ngear
-#    ssh_key: !secret asuswrt_ssh_key
-#    port: 22
-#    new_device_defaults:
-#      track_new_devices: false
-#      hide_if_away: false
-#  - platform: nmap_tracker
-#    consider_home: 180
-#    hosts:
-#      - 192.168.1.147
-#      - 192.168.1.154
-#      - 192.168.1.146
-#      - 192.168.1.159
-#      - 192.168.1.135
-#    home_interval: 15
-#    scan_options: " --privileged -p 62078 -sS "
   - platform: tile
     consider_home: 600
     username: !secret tile_user
     password: !secret tile_pw
 
-asterisk_mbox:
-  password: !secret astmbox-pw
-  host: !secret astmbox-host
-  port: !secret astmbox-port
+#asterisk_mbox:
+#  password: !secret astmbox-pw
+#  host: !secret astmbox-host
+#  port: !secret astmbox-port
 
 input_select:
   jay_room_tracker:
@@ -334,6 +319,21 @@ sun:
 
 map:
 
+person:
+
+default_config:
+
+remote:
+  - platform: harmony
+    name: GYM
+    host: 192.168.1.136
+  - platform: harmony
+    name: livingroom
+    host: 192.168.1.144
+  - platform: harmony
+    name: basement
+    host: 192.168.1.145
+
 recorder:
   db_url: !secret recorder_db_url
   purge_interval: 2
@@ -349,10 +349,15 @@ influxdb:
       - sensor.basement2_temperature
       - sensor.entry_temperature
       - sensor.jay_home
-      - sensor.pws_temp_f
+      - sensor.outside_temp
       - group.jay
 
 weather:
   - platform: darksky
     api_key: !secret darksky_api
     mode: daily
+  - platform: openweathermap
+    api_key: !secret openweathermap_api
+    mode: hourly
+
+system_health:

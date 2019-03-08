@@ -8,6 +8,6 @@ logs:
   homeassistant.components.http: error
   homeassistant.components.media_player: error
   homeassistant.components.recorder: error
-  homeassistant.components.sensor.wunderground: error
+#  homeassistant.components.sensor.wunderground: error
   homeassistant.components.zwave: error
   homeassistant.helpers.script: error

@@ -149,7 +149,7 @@ Basement:
     - input_boolean.power_switch_2
     - input_boolean.power_switch_3
     - input_boolean.power_switch_4
-    - switch.rainmachine
+    - switch.sprinkler
 #    - group.ffmpeg_noise_sensor
 
 Den:
@@ -307,7 +307,7 @@ Binary Sensors:
     - binary_sensor.entry_sensor
     - binary_sensor.den_sensor
     - binary_sensor.kitchen_sensor
-    - binary_sensor.gwink
+#    - binary_sensor.gwink
 
 Madeline:
   view: no
@@ -331,9 +331,9 @@ Jay:
   name: Jay
   entities:
 #    - sensor.jay_home
-    - device_tracker.tile_p6592b29a51b689a4f4217c1f4100d865
+    - device_tracker.tile_p_6592b29a51b689a4f4217c1f4100d865
     - device_tracker.tile_bbcc7226a36f4551
-    - device_tracker.jays7_galaxy_s7
+    - device_tracker.jay_galaxys9
 
 JayIn:
   view: no
@@ -381,7 +381,7 @@ Misc Automations:
     - automation.no_motion_countdown
     - automation.track_sensor_state_of_jay_wifi_locator
     - automation.lights_off_at_midnight
-    - automation.wink_update_needed_notifier
+#    - automation.wink_update_needed_notifier
     - automation.garage_door_open_notification
     - automation.capture_mpd_media_player_events
     - automation.family_home_turn_nest_to_home_mode
@@ -547,7 +547,7 @@ Misc Sensors:
     - sensor.lr_motion_detection
     - sensor.current_ha_version
     - sensor.installed_version
-    - device_tracker.jays7_galaxy_s7
+    - device_tracker.jay_galaxys9
     - device_tracker.tile_bbcc7226a36f4551
     - device_tracker.tile_da8334d21ec24ab2
 #    - sensor.ffmpeg_noise_status

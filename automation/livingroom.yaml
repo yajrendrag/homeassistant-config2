@@ -72,7 +72,7 @@
 - alias: 'Light 15 min fade-in to 33% starting at midnight'
   trigger:
     platform: time
-    at: '00:01:00'
+    at: '23:59:59'
   action:
     - service: python_script.zwave_fade
       data:

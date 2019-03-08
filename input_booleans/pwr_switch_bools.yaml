@@ -11,6 +11,6 @@ power_switch_3:
   initial: on
   icon: mdi:power-socket
 power_switch_4:
-  name: Switch 4 - Wink
+  name: Switch 4 #- Wink
   initial: on
   icon: mdi:power-socket

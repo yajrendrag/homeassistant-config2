@@ -22,7 +22,7 @@
       state: on
     light.basement_cabinet:
       state: on
-      brightness: 255
+#      brightness: 255
     light.basement_wall:
       state: on
       brightness: 254
@@ -59,7 +59,7 @@
       state: off
     light.basement_cabinet:
       state: on
-      brightness: 30
+#      brightness: 30
     light.basement_wall:
       state: on
       brightness: 30

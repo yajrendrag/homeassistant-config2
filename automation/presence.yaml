@@ -113,15 +113,21 @@
 - alias: 'Jay Home'
 #  initial_state: True
   condition:
-    condition: state
-    entity_id: input_boolean.jay_home
-    state: 'off'
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_boolean.jay_home
+        state: 'off'
+      - condition: numeric_state
+        entity_id: group.jay
+        above: '1'
+        value_template: "{{ dict(( states|selectattr('entity_id', 'in', state_attr('group.jay', 'entity_id'))|list)|groupby('state'))['home']|count }}"
   trigger:
     - platform: state
-      entity_id: device_tracker.jays7_galaxy_s7
-      to: 'home'
-    - platform: state
-      entity_id: device_tracker.tile_bbcc7226a36f4551
+      entity_id:
+        - device_tracker.jay_galaxys9
+        - device_tracker.tile_bbcc7226a36f4551
+        - device_tracker.tile_p_6592b29a51b689a4f4217c1f4100d865
       to: 'home'
   action:
      service: input_boolean.turn_on
@@ -130,15 +136,24 @@
 - alias: 'Jay Not Home'
 #  initial_state: False
   condition:
-    condition: state
-    entity_id: input_boolean.jay_home
-    state: 'on'
+    condition: and
+    conditions:
+      - condition: state
+        entity_id: input_boolean.jay_home
+        state: 'on'
+      - condition: numeric_state
+        entity_id: group.jay
+        below: '2'
+        value_template: "{{ dict(( states|selectattr('entity_id', 'in', state_attr('group.jay', 'entity_id'))|list)|groupby('state'))['home']|count }}"
   trigger:
-    platform: state
-    entity_id: group.jay
-    to: 'not_home'
-    for:
-      minutes: '5'
+    - platform: state
+      entity_id:
+        - device_tracker.jay_galaxys9
+        - device_tracker.tile_bbcc7226a36f4551
+        - device_tracker.tile_p_6592b29a51b689a4f4217c1f4100d865
+      to: 'not_home'
+      for:
+        minutes: '1'
   action:
      service: input_boolean.turn_off
      entity_id: input_boolean.jay_home
